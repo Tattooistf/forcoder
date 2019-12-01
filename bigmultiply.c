@@ -2,7 +2,7 @@
 #include "stdlib.h"
 #include "string.h"
 #include "ctype.h"
-
+//OJ上的题目，只是将提供的用例调试通过，还没有系统测试过，先保存起来
 /*
  * i have a very simple problem for you.
  * Given two integers A and B,you job is to multiply the product is of A*B
