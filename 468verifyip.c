@@ -128,3 +128,63 @@ char * validIPAddress(char * IP){
     }
 }
 
+//对代码进行优化，减少重复率；但是因为使用了函数指针从而导致性能上增加了4ms，整体表现不如上一个题解
+char * validIPAddress2(char * IP){
+    char *str=IP;
+    int count4=0;
+    int count6=0;
+    int count=0;
+    int countbase=0;
+    char *ret=NULL;
+
+    //判断是否为IPv4和IPv6分隔符个数
+    while (*str!='\0')
+    {
+        if (*str=='.')
+        {
+            count4++;
+        }
+        if (*str==':')
+        {
+            count6++;
+        }
+        str++; 
+    }
+    if (count4 != 3 && count6 != 7)
+    {
+        return NOR;
+    }
+
+    char *splitstr=NULL;
+    typedef int (*pfFunc)(char *);
+    pfFunc pfcheckfunc=NULL;
+    if (count4 == 3) //表示为IPv4，否则为IPv6
+    {
+        splitstr=".";
+        pfcheckfunc=IsIpv4;
+        countbase=count4+1;
+        ret=IPV4;
+    }
+    else
+    {
+        splitstr=":";
+        pfcheckfunc=IsIpv6;
+        countbase=count6+1;
+        ret=IPV6;
+    }
+
+    //判断是否满足要求
+    str=strtok(IP,splitstr);
+    while (str!=NULL)
+    {
+        count++;
+        if(!pfcheckfunc(str)) return NOR;
+        str=strtok(NULL,splitstr);
+    }    
+    if (count!=countbase)
+    {
+        return NOR;
+    }   
+    return ret;      
+}
+
