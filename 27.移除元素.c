@@ -68,7 +68,26 @@
 // 1、right都是重复数字的情况
 // 2、223这种会导致left和right相同的情况
 // 调试通过后才发现第一次直接全部遍历，不相等的从前到后重新存储就行，简单3行语句搞定
+// 性能最好的一种。
 int removeElement(int* nums, int numsSize, int val){
+    int left=0,right=numsSize-1;
+
+    while (left<=right)
+    {
+        if (nums[left]==val)
+        {
+            // 原本是交换，后来发现直接去掉最后一个更合适
+            nums[left]=nums[right--];
+        }
+        else
+        {
+            left++;
+        }
+    }
+    return left;
+}
+// 最好理解的一种
+int removeElement1(int* nums, int numsSize, int val){
     int tmp=0;
 
     for (int i = 0; i < numsSize; i++)
@@ -76,7 +95,7 @@ int removeElement(int* nums, int numsSize, int val){
         if (nums[i]!=val)
         {
             nums[tmp++]=nums[i];
-        }
+        }       
     }
     return tmp;
 }
@@ -121,7 +140,7 @@ int removeElement0(int* nums, int numsSize, int val){
 
 // @lc code=end
 
-int array[]={3,2,1,3};
+int array[]={3,2,2,3};
 int val=3;
 int main(void)
 {
