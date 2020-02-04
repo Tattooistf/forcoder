@@ -45,6 +45,8 @@ void dfs(int deep,char* digits,char **retstr);
  * Note: The returned array must be malloced, assume caller calls free().
  */
 char ** letterCombinations(char * digits, int* returnSize){
+    // 全局变量一定要归零，巨大无比的坑
+    count=0;
     *returnSize = 0;
     if (strlen(digits)<1)
     {
@@ -52,22 +54,8 @@ char ** letterCombinations(char * digits, int* returnSize){
     }
     
     char **ret=(char**)malloc(sizeof(char*)*1000);
-    printf("0x%x\n",ret);
     dfs(0,digits,ret);
-
-    if (digits[0]=='2' && digits[1]=='3')
-    {
-        *returnSize=count;
-    }
-    else
-    {
-        printf("test\n");
-        *returnSize=1;
-        printf("0x%x\n",ret[0]);
-    }
-    
-    
-    // *returnSize = 1;
+    *returnSize = count;
 
     return ret;
 }
@@ -78,14 +66,10 @@ void dfs(int deep,char* digits,char **retstr)
     if (deep == length)
     {
         char *str = (char *)malloc(length+1);
-
         ch[deep]='\0';
         strcpy(str,ch);
         str[deep]='\0';
-        printf("count:%d\n",count);
         retstr[count++] = str;
-        printf("str:0x%x,%s\n",str,str);
-        printf("retstr:0x%x,0x%x\n",retstr,retstr[count-1]);
         return;
     }
 
