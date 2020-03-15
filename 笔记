@@ -64,3 +64,8 @@ B[n]的前缀和数组sumB[n]=B[0]+B[1]+…+B[n]
 1.给定A[]，在区间[i,j]的所有数组均加value，求操作后的A[]。
 
 2.给定A[]，求区间[i,j]的和，
+
+把序列A的区间【l，r】加d，其差分序列的变化为Bl加d，Br+1减d，其他位置不变，把原序列上的区间操作转化为差分序列上的单点操作进行计算
+
+https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247484488&amp;idx=1&amp;sn=848f76e86fce722e70e265d0c6f84dc3&source=41#wechat_redirect
+https://www.cnblogs.com/LMCC1108/p/10753451.html 关注二维的最优解求解
