@@ -59,8 +59,65 @@
 #include "math.h"
 // @lc code=start
 
-// 第一次解题直接尝试使用滑动窗口
+// 第二次使用前缀和暴力破解 83/93，时间超时，
 int shortestSubarray(int* A, int ASize, int K){
+    long long sum=0;
+    int res=ASize;
+    int flag=0;
+
+    if (A==NULL || ASize<1)
+    {
+        return -1;
+    }
+    int *presum=(int *)malloc(sizeof(int)*ASize);
+    // 计算前缀和
+    for (int i = 0; i < ASize; i++)
+    {
+        sum+=A[i];
+        presum[i]=sum;
+    }
+    // 比较每一个前缀和，判断是否有最小大于K的情况
+    for (int i = 0; i < ASize; i++)
+    {
+        if (presum[i]>=K)//本身的sum也需要治疗
+        {
+            flag=1;
+            res=res>(i+1)?(i+1):res;
+        }
+        
+        for (int j = i+1; j < ASize; j++)
+        {
+            if (presum[j]-presum[i]>=K)
+            {
+                flag=1;
+                res=res>(j-i)?(j-i):res;
+            }
+            
+        }
+    }
+    res=(flag<1)?-1:res;
+    free(presum);
+    presum=NULL;
+    return res;
+}
+
+
+// @lc code=end
+
+int main(void)
+{
+    int array[]={77,19,35,10,-14};
+    int sum=19;
+    int len=0;
+    len=shortestSubarray(array,sizeof(array)/sizeof(array[0]),sum);
+    printf("%d\n",len);
+
+    return 0;
+}
+
+
+// 第一次解题直接尝试使用滑动窗口
+int shortestSubarray2(int* A, int ASize, int K){
     long long sum=0;
     int left=0,right=0;
     int res=ASize;
@@ -122,16 +179,3 @@ int shortestSubarray(int* A, int ASize, int K){
     return res;
 }
 
-
-// @lc code=end
-
-int main(void)
-{
-    int array[]={45,95,97,-34,-42};
-    int sum=21;
-    int len=0;
-    len=shortestSubarray(array,sizeof(array)/sizeof(array[0]),sum);
-    printf("%d\n",len);
-
-    return 0;
-}
