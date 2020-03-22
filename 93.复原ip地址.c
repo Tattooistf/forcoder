@@ -52,14 +52,32 @@ char ** restoreIpAddresses(char * s, int* returnSize){
     return result;
 }
 
+int checkvalid(char *s)
+{
+    int inter=atoi(s);
+    int interlen=0;
+    int tmpinter=inter;
+
+    while (tmpinter)
+    {
+        tmpinter/=10;
+        interlen++;
+    }
+    
+    if (inter>255 || inter<0 ||(strlen(s)>1 && interlen<strlen(s)))//排除01，00这样的情况
+    {
+        return 0; //没有正确的解
+    }
+    return 1;     
+}
+
 void dfs(int level,char *s,char **result,int *returnSize,int point)
 {
     int tmp=0;
     int len=strlen(s);
     if (level==4)
     {
-        tmp=atoi(s);
-        if (tmp>255 || tmp<0 || len==0)
+        if (!checkvalid(s) || len==0)
         {
             return; //没有正确的解
         }
@@ -79,7 +97,7 @@ void dfs(int level,char *s,char **result,int *returnSize,int point)
         if((len-i)>(4-level)*3) continue;//剩余的层级最大长度如果小于str的长度，说明肯定没有解
         char ctmp[4]={0};
         memcpy(ctmp,s,i);
-        if (atoi(ctmp)>255 || atoi(ctmp)<0)
+        if (!checkvalid(ctmp))
         {
             return;
         }
@@ -96,7 +114,7 @@ void dfs(int level,char *s,char **result,int *returnSize,int point)
 // @lc code=end
 int main(void)
 {
-    char *test="0000";
+    char *test="010010";
     int count =0;
     char **res=restoreIpAddresses(test,&count);
     return 0;
