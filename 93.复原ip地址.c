@@ -29,6 +29,7 @@
 #include "math.h"
 // @lc code=start
 
+char res[16]={0};
 void dfs(int level,char *s,char **result,int *returnSize,int point);
 /**
  * Note: The returned array must be malloced, assume caller calls free().
@@ -38,51 +39,55 @@ char ** restoreIpAddresses(char * s, int* returnSize){
     char tmp[16]={0};
     char **result=(char **)malloc(sizeof(char *)*27);
     memset(result,0,sizeof(char *)*27);
+    memset(res,0,sizeof(res));
 
     if (strlen(s)>12 || strlen(s)<4)
     {
         *returnSize=0;
         return NULL;
     }
-
+    *returnSize=0;
     dfs(1,s,result,returnSize,0);
     
     return result;
 }
 
-char res[16]={0};
-
 void dfs(int level,char *s,char **result,int *returnSize,int point)
 {
     int tmp=0;
+    int len=strlen(s);
     if (level==4)
     {
         tmp=atoi(s);
-        if (tmp>255 || tmp<0)
+        if (tmp>255 || tmp<0 || len==0)
         {
             return; //没有正确的解
         }
         strcpy(res+point,s);
-        res[point+strlen(s)]='\0';
-        char *str=(char *)malloc(sizeof(char)*strlen(res));
+        res[point+len]='\0';
+        char *str=(char *)malloc(sizeof(char)*(strlen(res)+1));//第一次掉坑没后+1导致访问异常
         strcpy(str,res);
-        result[*returnSize]=str;
+        //printf("%s\n",str);
+        result[*returnSize]=str;//第二次掉坑returnSize没有给初值，再次异常
         (*returnSize)++;
         return;
     }
 
     for (int i = 1; i < 4; i++)
     {
-        if(i>strlen(s)) return;
+        if(i>len) return;
+        if((len-i)>(4-level)*3) continue;//剩余的层级最大长度如果小于str的长度，说明肯定没有解
         char ctmp[4]={0};
         memcpy(ctmp,s,i);
         if (atoi(ctmp)>255 || atoi(ctmp)<0)
         {
             return;
         }
+        //printf("level %d,i %d\n",level,i);
         memcpy(res+point,s,i);      
-        dfs(level+1,s+i,result,returnSize,point+i);
-        memset(res+point,0,i);
+        res[point+i]='.';
+        dfs(level+1,s+i,result,returnSize,point+i+1);
+        memset(res+point,0,i+1);//+1是包含了分隔符.的空间
     }
     
     return;
@@ -91,7 +96,7 @@ void dfs(int level,char *s,char **result,int *returnSize,int point)
 // @lc code=end
 int main(void)
 {
-    char *test="1111";
+    char *test="0000";
     int count =0;
     char **res=restoreIpAddresses(test,&count);
     return 0;
