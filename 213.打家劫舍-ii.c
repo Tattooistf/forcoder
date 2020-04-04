@@ -38,8 +38,67 @@
 #include "string.h"
 #include "ctype.h"
 // @lc code=start
+#if 1
+// 思路错误，最大值与次大值与最终解没有关系。还是第一次的思路正确，相邻三个的状态选择问题，应该使用动态规划
 
+int rob(int* nums, int numsSize){
+    int sum0=0;
+    int sum1=0;
 
+    if (nums==NULL || numsSize==0)
+    {
+        return 0;
+    }
+
+    int *array=(int *)malloc(numsSize*sizeof(nums[0]));
+    int *temp=(int *)malloc(numsSize*sizeof(nums[0]));
+    for (int i = 0; i < numsSize; i++)
+    {
+        array[i]=i;
+        temp[i]=nums[i];
+    }
+    
+    //  从大到小存储最大值的下标或位置
+    for (int i = 0; i < numsSize; i++)
+    {
+        for (int j = i+1; j < numsSize; j++)
+        {
+            if (nums[array[i]]<nums[array[j]])
+            {
+                int tmp=array[i];
+                array[i]=array[j];
+                array[j]=tmp;
+            }
+        }
+    }
+//选最大值
+    for (int i = 0; i < numsSize; i++)
+    {
+        if (temp[array[i]]==0)
+        {
+            continue;
+        }
+        sum0+=temp[array[i]];
+        temp[(array[i]-1+numsSize)%numsSize]=0;
+        temp[(array[i]+1)%numsSize]=0;
+    }
+// 选次大值
+    memcpy(temp,nums,sizeof(int)*numsSize);
+    for (int i = 1; i < numsSize; i++)
+    {
+        if (temp[array[i]]==0)
+        {
+            continue;
+        }
+        sum1+=temp[array[i]];
+        temp[(array[i]-1+numsSize)%numsSize]=0;
+        temp[(array[i]+1)%numsSize]=0;
+    }    
+    free(array);
+    free(temp);
+    return sum0>sum1?sum0:sum1;    
+}
+#else
 int rob(int* nums, int numsSize){
     int sum0=0;
     int sum1=0;
@@ -109,13 +168,14 @@ int rob(int* nums, int numsSize){
     free(temp);
     return sum0>sum1?sum0:sum1;
 }
+#endif
 
 
 // @lc code=end
 int main(void)
 {
     //[1,2,3,100,4,20,21,2000]
-    int array[]={1,2,3,100,4,20,21,2000};
+    int array[]={1,7,9,4};
     int ret=0;
     ret=rob(array,sizeof(array)/sizeof(array[0]));
     return 0;
