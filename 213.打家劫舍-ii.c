@@ -38,10 +38,44 @@
 #include "string.h"
 #include "ctype.h"
 // @lc code=start
-#if 1
-// 思路错误，最大值与次大值与最终解没有关系。还是第一次的思路正确，相邻三个的状态选择问题，应该使用动态规划
+// 使用动态规划解题
+#define max(a,b) ((a)>(b))?(a):(b)
 
 int rob(int* nums, int numsSize){
+    int sum=0;
+    if(nums==NULL || numsSize==0) return 0;
+    if (numsSize==1)
+    {
+        return nums[0];
+    }
+    
+    int *dp=(int *)malloc((numsSize+2)*sizeof(int));
+    memset(dp,0,(numsSize+2)*sizeof(int));
+    // 考虑环状布局可以分为从下面2种可能中找到最大值，1、区间[0~len-1];2、区间[1~len]
+    for (int i = numsSize-2; i >= 0; i--)
+    {
+        // i的值有两种可能：不抢则是i+1的值，抢则i+1不能抢为当前的值+i+2的值
+        dp[i]=max(dp[i+1],nums[i]+dp[i+2]);
+    }
+    sum=dp[0];
+    memset(dp,0,(numsSize+2)*sizeof(int));
+    for (int i = numsSize-1; i >= 1; i--)
+    {
+        // i的值有两种可能：不抢则是i+1的值，抢则i+1不能抢为当前的值+i+2的值
+        dp[i]=max(dp[i+1],nums[i]+dp[i+2]);
+    }
+    sum=sum>dp[1]?sum:dp[1];//掉过坑，区间1～len，dp只能取值dp[1]
+    free(dp);
+    return sum;
+}
+
+
+// @lc code=end
+
+
+// 思路错误，最大值与次大值与最终解没有关系。还是第一次的思路正确，相邻三个的状态选择问题，应该使用动态规划
+// 第二次解题，想到了动态规划，觉得复杂又放弃
+int rob1(int* nums, int numsSize){
     int sum0=0;
     int sum1=0;
 
@@ -98,8 +132,9 @@ int rob(int* nums, int numsSize){
     free(temp);
     return sum0>sum1?sum0:sum1;    
 }
-#else
-int rob(int* nums, int numsSize){
+
+// 第一次使用贪心算法，整体思路比较接近，但场景考虑不周解答失败
+int rob0(int* nums, int numsSize){
     int sum0=0;
     int sum1=0;
     int index=0;
@@ -168,10 +203,8 @@ int rob(int* nums, int numsSize){
     free(temp);
     return sum0>sum1?sum0:sum1;
 }
-#endif
 
 
-// @lc code=end
 int main(void)
 {
     //[1,2,3,100,4,20,21,2000]
