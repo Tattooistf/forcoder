@@ -73,7 +73,8 @@
 // 1、排序后计算left和right的数目，取最小值
 // 2、计算重复的个数，总数的一半减去重复的个数；可是当重复个数超过一半的时候，无解
 // 3、只能想到最原始的解法，按重复次数从高到底排序，结果是超时;最终使用qsort优化解决超时问题
-#define MAX (100002)
+
+#define MAX (100002) //最大值不能直接作为下标，需要预留max+1
 int cmpmax(const void* a,const void* b)
 {
     return *((int*)a)<*((int*)b)?1:0;
@@ -100,25 +101,11 @@ int minSetSize(int* arr, int arrSize){
     }
     
     qsort(array,count,sizeof(int),cmpmax);
-    #if 0
-    for (int i = 0; i < count; i++)
-    {
-        for (int j = i+1; j < count; j++)
-        {
-            if (array[i]<array[j])
-            {
-                int temp=array[i];
-                array[i]=array[j];
-                array[j]=temp;
-            }
-        }
-    }
-    #endif
     int sum=0;
     for (int i = 0; i < count; i++)
     {
         sum+=array[i];
-        if(sum>=(arrSize>>1)) return i+1;
+        if(sum>=(arrSize>>1)) return i+1;//需要释放内存
     }
     free(array);
     return count;
