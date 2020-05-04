@@ -139,5 +139,4 @@ void print(struct ListNode *pNode)
     }
     printf("null\n");
     return;
-    
 }
