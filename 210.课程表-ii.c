@@ -59,6 +59,109 @@
 #include "ctype.h"
 // @lc code=start
 
+// 尝试使用出入度的方式解决，类似BFS队列方式
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+#define MAX 1000
+int Q[MAX] = {0};
+int g_Wr = 0;
+int g_Rd = 0;
+int g_Count = 0;
+void queueinit()
+{
+    g_Wr = 0;
+    g_Rd = 0;
+    g_Count = 0;
+    memset(Q,0,sizeof(Q));
+    return;
+}
+
+void enqueue(int index)
+{
+    if (g_Count == MAX)
+    {
+        printf("FULL\n");
+        return;
+    }
+    Q[g_Wr] = index;
+    g_Wr =  (g_Wr+1)%MAX;
+    g_Count++; // 差一点忘记计数刷新
+    return;
+}
+
+int dequeue(void)
+{
+    if (g_Count == 0)
+    {
+        printf("EMPTY\n");
+        return -1;
+    }
+    int val = Q[g_Rd];
+    g_Rd = (g_Rd+1)%MAX;
+    g_Count--;
+    return val;    
+}
+
+int isEmpty(void)
+{
+    return (g_Count == 0);
+}
+
+int* findOrder(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize, int* returnSize){
+    *returnSize = 0;
+    int *res = (int *)malloc(sizeof(int)*numCourses);
+    memset(res,0,sizeof(int)*numCourses);
+    // 建立入度数组信息
+    int *degree = (int *)malloc(sizeof(int)*numCourses);
+    memset(degree,0,sizeof(int)*numCourses);
+    for (int i = 0; i < prerequisitesSize; i++)
+    {
+        degree[prerequisites[i][0]]++;
+    }
+    queueinit();
+    for (int i = 0; i < numCourses; i++)
+    {
+        if (degree[i] == 0)
+        {
+            enqueue(i);
+        }
+    }
+
+    while (!isEmpty())
+    {
+        int index = dequeue();
+        if (index == -1)
+        {
+            return NULL;
+        }
+        res[(*returnSize)++] = index;
+
+        for (int i = 0; i < prerequisitesSize; i++)
+        {
+            if (index == prerequisites[i][1])
+            {
+                degree[prerequisites[i][0]]--;
+                if (degree[prerequisites[i][0]] == 0)
+                {
+                    enqueue(prerequisites[i][0]);
+                }
+            }   
+        }
+    }
+
+    if (*returnSize != numCourses) // 差一点遗漏这种场景
+    {
+        *returnSize = 0;
+    }
+    
+    free(degree);
+    return res;
+}
+
+// @lc code=end
+
+// 答题通过的递归解题思路dfs
 int DFS(int courses,int *visit, int ** array,int size,int *res,int *returnsize)
 {
     visit[courses] = -1; // 表示正在访问中
@@ -118,7 +221,3 @@ int* findOrder(int numCourses, int** prerequisites, int prerequisitesSize, int* 
     free(visit);
     return result;    
 }
-
-
-// @lc code=end
-
