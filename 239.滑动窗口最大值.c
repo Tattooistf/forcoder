@@ -58,6 +58,7 @@
 #include "ctype.h"
 // @lc code=start
 // 无论是第一种Heap解题方式，还是第二种单调栈解题方式，都是维护首节点是最大值的结构
+
 // 第二种解题思路：单调栈，需要加上栈底老化；实际上也是单调队列、优先级队列（思想类似）
 static int *g_Stack = NULL;
 static int g_Count = 0;
@@ -266,5 +267,55 @@ int* maxSlidingWindow(int* nums, int numsSize, int k, int* returnSize){
 
     DestroyHeap();
     *returnSize = idx;
+    return res;
+}
+
+// 第三种解题思路：动态规划，看解题答案是比较简单的
+#define MAX(a,b) ((a)>(b)?(a):(b))
+int GetMax(int *nums,int start,int len,int max)
+{
+    if (nums[start] != max)
+    {
+        return max;
+    }
+    int res = nums[start+1];
+    for (int i = start+2; i < start+len; i++) // 栽坑一次：直接使用了len，应该是start+len
+    {
+        if (nums[i] == max)
+        {
+            return max;
+        }
+        if (nums[i]>res)
+        {
+            res = nums[i];
+        }
+    }
+    return res;
+}
+int* maxSlidingWindow(int* nums, int numsSize, int k, int* returnSize){
+    if (nums == NULL || numsSize == 0 || k == 0)
+    {
+        *returnSize = 0;
+        return nums;
+    }
+    int *res = (int*)malloc(sizeof(int)*(numsSize-k+1));
+    memset(res,0,sizeof(int)*(numsSize-k+1));
+    int tmp = 0;
+    int max = nums[0];
+    for (int i = 1; i <= k-1; i++)
+    {
+        if (nums[i] > max)
+        {
+            max = nums[i];
+        }
+    }
+    res[0] = max;
+    for (int i = k; i < numsSize; i++)
+    {
+        tmp = GetMax(nums,i-k,k,max);// 原始区间扣除窗口左侧第一个值之后的最大值
+        max = MAX(tmp,nums[i]);
+        res[i-k+1] = max;
+    }
+    *returnSize = numsSize-k+1;
     return res;
 }
