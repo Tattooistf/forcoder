@@ -30,6 +30,8 @@
 
 优先级队列
     后面补充
+堆
+    push从低到高一层挪位置，pop返回1位置的值，有固定套路（先判断2*i和2*i+1的大小，然后再与最值进行比较挪位置）
 
 链表
     常见解题思路：创建哨兵节点、快慢指针（找环、倒数K节点）、O1删除节点（后节点覆盖当前节点）
@@ -63,6 +65,22 @@
     利用异或后选择为1的位域，来将数组分为2个，从而求得只出现1次的2个数字
 拓扑排序
     有向图的输出，有两种思路：1、出入度，每次都输出入度为零的，队列的方式，思路类似BFS；2、DFS遍历，先存储最后的节点；最后倒序输出；增加visit数组
+动态规划
+    常见的背包问题有1、组合问题。2、True、False问题。3、最大最小问题。
+    我在大神整理的基础上，又做了细分的整理。分为三类。
+    1、组合问题：
+    2、True、False问题：
+    3、最大最小问题：
+
+    组合问题公式
+        dp[i] += dp[i-num]
+    True、False问题公式
+        dp[i] = dp[i] or dp[i-num]
+    最大最小问题公式
+    dp[i] = min(dp[i], dp[i-num]+1)或者dp[i] = max(dp[i], dp[i-num]+1)
+
+链接：https://leetcode-cn.com/problems/combination-sum-iv/solution/xi-wang-yong-yi-chong-gui-lu-gao-ding-bei-bao-wen-/
+
 
 其他的思路总结
     https://segmentfault.com/a/1190000021762090
