@@ -105,3 +105,26 @@ int lengthOfLongestSubstring2(char * s){
     }
     return max;
 }
+
+#define max(a,b) (a)>(b)?(a):(b)
+int lengthOfLongestSubstring(char * s)
+{
+    int left = 0;
+    int right = 0;
+    int array[128] = {0};
+    int len = 0;
+
+    while(right < strlen(s))
+    {
+        int tmp = s[right];
+        array[tmp]++;
+        right++;
+        while(array[tmp]>1)
+        {
+            array[s[left]]--;
+            left++;
+        }
+        len = max(len, right-left);
+    }
+    return len;
+}
