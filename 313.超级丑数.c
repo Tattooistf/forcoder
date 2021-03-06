@@ -134,7 +134,7 @@ int nthSuperUglyNumber(int n, int* primes, int primesSize){
         for (int i = 0; i < primesSize; i++)
         {
             int new = val*primes[i];
-            if (new > INT_MAX || IsUsed(new))
+            if (new > INT_MAX/*  || IsUsed(new) */)
             {
                 continue;
             }
