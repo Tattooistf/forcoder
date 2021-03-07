@@ -49,14 +49,18 @@
 #include "string.h"
 #include "stdlib.h"
 // @lc code=start
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
 int cmp(const void *a,const void *b)
 {
     char *tmpa = *(char **)a;
     char *tmpb = *(char **)b;
     return strlen(tmpa)>strlen(tmpb);
 }
+<<<<<<< Updated upstream
 #define max(a,b) ((a)>=(b)?(a):(b))
 
 int findMaxForm(char ** strs, int strsSize, int m, int n){
@@ -66,6 +70,15 @@ int findMaxForm(char ** strs, int strsSize, int m, int n){
     int dp[601][101][101] = {0};
 
     //qsort(strs,strsSize,sizeof(char *),cmp);
+=======
+
+int findMaxForm(char ** strs, int strsSize, int m, int n){
+    int res = 0;
+    int cnt[600][2] = {0};
+    int cnttotal[2] = {0};
+
+    qsort(strs,strsSize,sizeof(char *),cmp);
+>>>>>>> Stashed changes
     for (int i = 0; i < strsSize; i++)
     {
         //printf("%s\n",strs[i]);
@@ -73,6 +86,7 @@ int findMaxForm(char ** strs, int strsSize, int m, int n){
         {
             if(strs[i][j] == '0')
             {
+<<<<<<< Updated upstream
                 cnt[i+1][0]++;
             }
             else
@@ -121,6 +135,8 @@ int findMaxForm(char ** strs, int strsSize, int m, int n){
         {
             if(strs[i][j] == '0')
             {
+=======
+>>>>>>> Stashed changes
                 cnt[i][0]++;
             }
             else
@@ -129,6 +145,7 @@ int findMaxForm(char ** strs, int strsSize, int m, int n){
             }
         }
     }
+<<<<<<< Updated upstream
 
     for (int k = 0; k < strsSize; k++) 
     {
@@ -146,10 +163,28 @@ int findMaxForm(char ** strs, int strsSize, int m, int n){
 
     return dp[m][n];
 }
+=======
+    
+    for (int i = 0; i < strsSize; i++)
+    {
+        if ((cnttotal[0] + cnt[i][0]) <= m && (cnttotal[1] + cnt[i][1]) <= n)
+        {
+            res++;
+            cnttotal[0]+=cnt[i][0];
+            cnttotal[1]+=cnt[i][1];
+        }
+                
+    }
+
+    return res;
+}
+// @lc code=end
+>>>>>>> Stashed changes
 
 
 // 错误解题思路
 int findMaxForm(char ** strs, int strsSize, int m, int n){
+<<<<<<< Updated upstream
     int dp[100+1][100+1] = {0};
     int cnt[100+1][2] = {0};
 
@@ -198,5 +233,34 @@ int findMaxForm(char ** strs, int strsSize, int m, int n){
 
     return res;    
 #endif
+=======
+    int dp[100][100] = {0};
+
+    dp[0][0] = 0;
+    dp[0][1] = 0;
+    dp[1][0] = 0;
+
+    for (int i = 0; i < strsSize; i++)
+    {
+        if (strcmp(strs[i],"1"))
+        {
+            dp[0][1] = 1;
+        }
+        else if (strcmp(strs[i],"0"))
+        {
+            dp[1][0] = 1;
+        }
+    }
+    
+    for (int i = 1; i < m; i++)
+    {
+        for (int j = 1; j < n; j++)
+        {
+            dp[i][j] = max(dp[i-1][j]+1,dp[i][j-1]+1);
+        }
+        
+    }
+
+>>>>>>> Stashed changes
     return dp[m][n];
 }
