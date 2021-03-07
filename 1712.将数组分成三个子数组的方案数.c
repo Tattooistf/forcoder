@@ -71,30 +71,31 @@ int waysToSplit(int* nums, int numsSize){
     {
         return 0;
     }
-    int *preSum = (int *)malloc(sizeof(int)*(numsSize+1));
-    memset(preSum,0,sizeof(int)*(numsSize+1));
-    //preSum[0] = nums[0];
-    for (int i = 1; i <= numsSize; i++)
+
+    int *preSum = (int *)malloc(sizeof(int)*(numsSize));
+    memset(preSum,0,sizeof(int)*(numsSize));
+    preSum[0] = nums[0];
+    for (int i = 1; i < numsSize; i++)
     {
-        preSum[i] = nums[i-1]+preSum[i-1];
+        preSum[i] = nums[i]+preSum[i-1];
     }
     int right = numsSize-1;
     int left = 0;
     int lSum = 0;
     int mSum = 0;
     int rSum = 0;
-    for (int i = 1; i < numsSize; i++) // fix left
+    for (int i = 0; i < numsSize; i++) // fix left
     {
-        if (preSum[i]*3 > preSum[numsSize])
+        if (preSum[i]*3 > preSum[numsSize-1])
         {
             break;
         }
         left = i+1;
-        right = numsSize-1;
+        right = numsSize-2;
         while (left <= right)
         {
             int mid = left + (right-left)/2;
-            mSum = preSum[mid] - preSum[i];
+            mSum = preSum[mid] - preSum[i];//[i,mid]的和，应该包含nums[i]
             lSum = preSum[i];
             if (mSum == lSum)
             {
@@ -112,11 +113,11 @@ int waysToSplit(int* nums, int numsSize){
         int mleft = left;
 
         left = i+1;
-        right = numsSize-1;
+        right = numsSize-2; //边界没有搞明白为什么需要使用-2才能行
         while (left <= right)
         {
             int mid = left + (right-left)/2;
-            rSum = preSum[numsSize] - preSum[mid];
+            rSum = preSum[numsSize-1] - preSum[mid];
             mSum = preSum[mid] - preSum[i];
             if (mSum == rSum)
             {
@@ -132,8 +133,16 @@ int waysToSplit(int* nums, int numsSize){
             }
         }
         int mright = right;
-        res += mright - mleft + 1;
+        if (mright >= mleft) //必须增加这个内容才能行,这个条件和上面的numsSize-2一起才能通过，否则在10w个0的时候会失败
+        {
+            res += mright - mleft + 1;
+        }
+        else
+        {
+            printf("%d-%d\n",mleft,mright);
+        }
     }
+    free(preSum);
     res = res % (int)(1e9+7);
     return res;
 }
