@@ -64,6 +64,58 @@ int Max(int a, int b)
 {
     return a>b?a:b;
 }
+
+int isTurbu(int *arr, int i)
+{
+    if (arr[i-2] > arr[i-1] && arr[i-1] < arr[i])
+    {
+        return 1;
+    }
+
+    if (arr[i-2] < arr[i-1] && arr[i-1] > arr[i])
+    {
+        return 1;
+    }
+    return 0;  
+}
+
+int maxTurbulenceSize(int* arr, int arrSize){
+    int maxlen = 0;
+    int len = 0;
+    if (arrSize <= 1)
+    {
+        return arrSize;
+    }
+    
+    for (int i = 0; i < arrSize; i++)
+    {
+        if (i>=2 && isTurbu(arr, i))
+        {
+            len++;
+        }        
+        else if (i>=1 && arr[i] != arr[i-1])
+        {
+            len = 2;
+        }
+        else
+        {
+            len = 1;
+        }
+        maxlen = Max(maxlen,len);   
+    }
+    return maxlen;  
+}
+
+// @lc code=end
+int array[]={4,8,12,16};
+int main(void)
+{
+    int p = 0;
+    p = maxTurbulenceSize(array, sizeof(array)/sizeof(array[0]));
+    return 0;
+}
+
+
 int maxTurbulenceSize(int* arr, int arrSize){
     if (arrSize < 2)
     {
@@ -101,12 +153,4 @@ int maxTurbulenceSize(int* arr, int arrSize){
         maxlen = Max(maxlen, right-left+1);
     }
     return maxlen;
-}
-// @lc code=end
-int array[]={4,8,12,16};
-int main(void)
-{
-    int p = 0;
-    p = maxTurbulenceSize(array, sizeof(array)/sizeof(array[0]));
-    return 0;
 }
