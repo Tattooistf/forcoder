@@ -59,6 +59,49 @@
 #include "stdio.h"
 #include "ctype.h"
 // @lc code=start
+int Max(int a, int b)
+{
+    return a>b?a:b;
+}
+//按照参考答案进行修正，使用滑动窗口
+int maxTurbulenceSize(int* arr, int arrSize){
+    int maxlen = 1;
+    int right = 0;
+    int left = 0;
+    long dir = 0; // 0表示升序 1表示降序
+    long dir2 = 0;
+
+    while (right < arrSize-1)
+    {
+        if (left == right)
+        {
+            if (arr[left] == arr[left+1])
+            {
+                left++;
+            }
+            right++;
+        }
+        else //说明至少有2个size
+        {
+            dir = (arr[right-1]-arr[right]); // 没有注意到值可能会超出范围
+            dir2 = (arr[right]-arr[right+1]);
+            if (dir*dir2 >= 0)
+            {
+                left=right;
+            }
+            else
+            {
+                right++;
+            }
+        }
+        
+        maxlen = Max(maxlen, right-left+1);
+    }
+    return maxlen;
+}
+
+
+// @lc code=end
 
 int Max(int a, int b)
 {
@@ -106,7 +149,6 @@ int maxTurbulenceSize(int* arr, int arrSize){
     return maxlen;  
 }
 
-// @lc code=end
 int array[]={4,8,12,16};
 int main(void)
 {
@@ -150,6 +192,41 @@ int maxTurbulenceSize(int* arr, int arrSize){
             continue;
         }
         right++;
+        maxlen = Max(maxlen, right-left+1);
+    }
+    return maxlen;
+}
+
+
+//按照参考答案进行修正，使用滑动窗口
+int maxTurbulenceSize(int* arr, int arrSize){
+    int maxlen = 1;
+    int right = 0;
+    int left = 0;
+    long dir = 0; // 0表示升序 1表示降序
+    long dir2 = 0;
+
+    while (right < arrSize-1)
+    {
+        if (left == right)
+        {
+            if (arr[left] == arr[left+1])
+            {
+                left++;
+            }
+            right++;
+        }
+        else //说明至少有2个size
+        {
+            dir = (arr[right-1]-arr[right]); // 没有注意到值可能会超出范围
+            dir2 = (arr[right]-arr[right+1]);
+            if (dir*dir2 >= 0)
+            {
+                left=right;
+            }
+            right++;
+        }
+        
         maxlen = Max(maxlen, right-left+1);
     }
     return maxlen;
