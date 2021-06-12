@@ -53,6 +53,52 @@
 
 // @lc code=start
 
+// 改进版，直接在第一次求deg的时候将每个数的left和right计算出来，后面直接使用
+int findShortestSubArray(int* nums, int numsSize){
+    int deg[50000] = {0};
+    int left[50000] = {0xFFFFFFFF}; // 当前mac的编译器上没法做到全部赋初值
+    int right[50000] = {0xFFFFFFFF};
+    int max = 0;
+    int maxnum = 0;
+    memset(deg,0,sizeof(deg)); 
+    memset(left,0xff,sizeof(left));
+    memset(right,0xff,sizeof(right));
+
+    for (int i = 0; i < numsSize; i++)
+    {
+        if (left[nums[i]] == 0xFFFFFFFF)
+        {
+            left[nums[i]] = i;
+        }
+        right[nums[i]] = i;
+        deg[nums[i]]++;
+        max = max > deg[nums[i]]?max:deg[nums[i]];
+        maxnum = maxnum>nums[i]?maxnum:nums[i];
+    }
+
+    int min = numsSize;
+    for (int i = 0; i <= maxnum; i++)
+    {
+        if (max != deg[i])
+        {
+            continue;
+        }
+        min = min<(right[i]-left[i]+1)?min:(right[i]-left[i]+1);
+    }
+    return min;
+}
+
+
+// @lc code=end
+int num[] = {2,1,1,2,1,3,3,3,1,3,1,3,2};
+
+int main(void)
+{
+    int a = findShortestSubArray(num,sizeof(num)/sizeof(num[0]));
+    return a;
+}
+
+
 int findShortestSubArray(int* nums, int numsSize){
     int deg[50000] = {0};
     int max = 0;
@@ -80,16 +126,6 @@ int findShortestSubArray(int* nums, int numsSize){
     }
     return min; //因为是非空，所以不用考虑min == numsSize的场景
 }
-
-// @lc code=end
-int num[] = {2,1,1,2,1,3,3,3,1,3,1,3,2};
-
-int main(void)
-{
-    int a = findShortestSubArray(num,sizeof(num)/sizeof(num[0]));
-    return a;
-}
-
 
 int findShortestSubArray(int* nums, int numsSize){
     int deg[50000] = {0};
