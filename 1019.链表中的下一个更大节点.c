@@ -157,8 +157,45 @@ struct ListNode *reverse(struct ListNode *list)
     
     return pre;
 }
-
+// 从前往后遍历，单调递减；当出现大于的时候不断赋值
 int* nextLargerNodes(struct ListNode* head, int* returnSize){
+    int len = 0;
+    struct ListNode *node = head;
+    while (node)
+    {
+        node = node->next;
+        len++;
+    }
+
+    int *arr = (int *)malloc(sizeof(int)*len);
+    int idx = 0;
+    node = head;
+    while (node)
+    {
+        arr[idx++] = node->val;
+        node = node->next;
+    }
+    StackInit(len);
+    int *ret = (int *)malloc(sizeof(int)*len);
+    memset(ret, 0, sizeof(int)*len);
+    for (int i = 0; i < len; i++)
+    {
+        while (!StackEmpty() && arr[StackTop()] < arr[i])
+        {
+            ret[StackTop()] = arr[i];
+            StackPop();
+        }
+        StackPush(i);
+    }
+    *returnSize = len;
+    free(arr);
+    StackDestory();
+    return ret;
+}
+
+
+// 从后往前遍历，单调递减，当出现大于的时候就不断弹栈，直到小于对方
+int* nextLargerNodes2(struct ListNode* head, int* returnSize){
     struct ListNode *newHead = NULL;
     int tmp[10000] = {0};
     int len = 0;
@@ -177,7 +214,7 @@ int* nextLargerNodes(struct ListNode* head, int* returnSize){
     }
     reversearr(tmp,len); 
     StackDestory();
-    
+
     int *ret = (int *)malloc(sizeof(int)*len);
     memcpy(ret,tmp,sizeof(int)*len);
     *returnSize = len;
